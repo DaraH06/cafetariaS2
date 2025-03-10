@@ -8,6 +8,8 @@ package newpackage;
  *
  * @author M VARREL MAULANA R
  */
-public class NewClass {
-    
+public class NewClass{
+    public static void main(String[] args) {
+        
+    }
 }
