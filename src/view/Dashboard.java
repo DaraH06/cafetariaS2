@@ -18,13 +18,15 @@ public class Dashboard extends javax.swing.JFrame {
     public Dashboard() {
         initComponents();
         DefaultColor=new Color(255,193,42);
-        ClickedColor=new Color(34, 40, 49);
+        ClickedColor=new Color(255, 223, 136);
         
         
         Barang.setBackground(DefaultColor);
         Penjualan.setBackground(DefaultColor);
         Laporan.setBackground(DefaultColor);
         Logout.setBackground(DefaultColor);
+        getContentPane().setBackground(Color.WHITE); // ini penting
+    jPanel1.setBackground(Color.WHITE); // kalau kamu pakai panel
     }
 
     /**
@@ -50,7 +52,9 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Logout.setBackground(new java.awt.Color(255, 193, 42));

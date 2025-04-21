@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
@@ -12,14 +13,9 @@ public class MenuBarang extends javax.swing.JInternalFrame {
         BasicInternalFrameUI ui=(BasicInternalFrameUI)this.getUI();
         ui.setNorthPane(null);
         
-        // Load ikon dan ubah ukurannya
-        ImageIcon icon = new ImageIcon(getClass().getResource("/vector/icon-plus.png"));
-        Image img = icon.getImage();
-        Image resizedImg = img.getScaledInstance(24, 24, Image.SCALE_SMOOTH); // Sesuaikan ukurannya
-        ImageIcon resizedIcon = new ImageIcon(resizedImg);
-
-        // Pasang ikon ke jLabel1
-        jLabel1.setIcon(resizedIcon);
+        getContentPane().setBackground(Color.WHITE); // ini penting
+    jPanel1.setBackground(Color.WHITE); // kalau kamu pakai panel
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -29,11 +25,12 @@ public class MenuBarang extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jPanel2 = new javax.swing.JPanel();
+        tambah = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(820, 690));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -47,27 +44,30 @@ public class MenuBarang extends javax.swing.JInternalFrame {
             }
         });
 
-        jPanel2.setBackground(new java.awt.Color(114, 237, 107));
+        tambah.setBackground(new java.awt.Color(114, 237, 107));
+        tambah.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tambahMouseClicked(evt);
+            }
+        });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vector/icon-plus.png"))); // NOI18N
         jLabel1.setText("Tambah");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        javax.swing.GroupLayout tambahLayout = new javax.swing.GroupLayout(tambah);
+        tambah.setLayout(tambahLayout);
+        tambahLayout.setHorizontalGroup(
+            tambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tambahLayout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addComponent(jLabel1)
+                .addContainerGap(57, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        tambahLayout.setVerticalGroup(
+            tambahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tambahLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -80,8 +80,8 @@ public class MenuBarang extends javax.swing.JInternalFrame {
                     .addComponent(jLabel2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 481, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 463, Short.MAX_VALUE)
+                        .addComponent(tambah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(476, 476, 476))
         );
         jPanel1Layout.setVerticalGroup(
@@ -91,7 +91,7 @@ public class MenuBarang extends javax.swing.JInternalFrame {
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tambah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
                 .addContainerGap(966, Short.MAX_VALUE))
         );
@@ -100,7 +100,10 @@ public class MenuBarang extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1245, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1233, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -114,12 +117,27 @@ public class MenuBarang extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    private void tambahMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tambahMouseClicked
+        // Mengambil parent JDesktopPane
+    javax.swing.JDesktopPane desktopPane = getDesktopPane();
+
+    if (desktopPane != null) {
+        // Menutup internal frame saat ini
+        this.dispose();
+
+        // Membuka internal frame baru (misalnya TambahBarang)
+        Menutambahbarang tambahBarangFrame = new Menutambahbarang();
+        desktopPane.add(tambahBarangFrame);
+        tambahBarangFrame.setVisible(true);
+    }
+    }//GEN-LAST:event_tambahMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JPanel tambah;
     // End of variables declaration//GEN-END:variables
 }

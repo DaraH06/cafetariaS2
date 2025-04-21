@@ -4,6 +4,13 @@
  */
 package view;
 
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
@@ -12,16 +19,26 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
  */
 public class Menutambahbarang extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form Menutambahbarang
-     */
     public Menutambahbarang() {
         initComponents();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
         BasicInternalFrameUI ui=(BasicInternalFrameUI)this.getUI();
         ui.setNorthPane(null);
+        
+        getContentPane().setBackground(Color.WHITE); // ini penting
 
     }
+    
+    public Connection koneksi() {
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cafetaria", "root", "");
+        return conn;
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Koneksi Gagal: " + e.getMessage());
+        return null;
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -33,17 +50,24 @@ public class Menutambahbarang extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        n_barang = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        Harga = new javax.swing.JTextField();
+        simpan = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        stok = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        kode = new javax.swing.JTextField();
+
+        setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setText("menu tambah barang");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        n_barang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                n_barangActionPerformed(evt);
             }
         });
 
@@ -52,6 +76,29 @@ public class Menutambahbarang extends javax.swing.JInternalFrame {
         jLabel3.setText("Nama Barang");
 
         jLabel4.setText("Harga / pcs");
+
+        Harga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                HargaActionPerformed(evt);
+            }
+        });
+
+        simpan.setText("Simpan");
+        simpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                simpanActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Stok");
+
+        stok.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stokActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Kode Barang");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -66,14 +113,23 @@ public class Menutambahbarang extends javax.swing.JInternalFrame {
                             .addComponent(jLabel1)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(86, 86, 86)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(kode, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(n_barang)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(57, 57, 57)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(163, 163, 163)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(207, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(Harga, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(57, 57, 57)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(stok, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(simpan, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -85,28 +141,87 @@ public class Menutambahbarang extends javax.swing.JInternalFrame {
                 .addGap(63, 63, 63)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(441, Short.MAX_VALUE))
+                    .addComponent(Harga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(stok, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(n_barang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(63, 63, 63)
+                        .addComponent(simpan))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(kode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(355, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void n_barangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_n_barangActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_n_barangActionPerformed
+
+    private void HargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HargaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_HargaActionPerformed
+
+    private void stokActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stokActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_stokActionPerformed
+
+    private void simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanActionPerformed
+        
+        String nama = n_barang.getText();
+        String code = kode.getText();
+    String hargaText = Harga.getText();
+    String stokText = stok.getText();
+
+    try {
+        int harga = Integer.parseInt(hargaText);
+        int stokBarang = Integer.parseInt(stokText);
+
+        Connection conn = koneksi();
+        String sql = "INSERT INTO barang (KODE,nama, harga, stok) VALUES (?, ?, ?, ?)";
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setString(1, code);
+        pst.setString(2, nama);
+        pst.setInt(3, harga);
+        pst.setInt(4, stokBarang);
+
+        pst.executeUpdate();
+        JOptionPane.showMessageDialog(null, "Data berhasil disimpan!");
+
+        // Kosongkan field
+        kode.setText("");
+        n_barang.setText("");
+        Harga.setText("");
+        stok.setText("");
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Harga dan Stok harus berupa angka!");
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Gagal menyimpan data: " + e.getMessage());
+    }
+    }//GEN-LAST:event_simpanActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField Harga;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JTextField kode;
+    private javax.swing.JTextField n_barang;
+    private javax.swing.JButton simpan;
+    private javax.swing.JTextField stok;
     // End of variables declaration//GEN-END:variables
 }
