@@ -35,30 +35,30 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="kode" pref="171" max="32767" attributes="0"/>
-                          <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="n_barang" alignment="1" max="32767" attributes="0"/>
-                          <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="Harga" alignment="0" min="-2" pref="181" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="buat" min="-2" pref="72" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="n_barang" pref="171" max="32767" attributes="0"/>
+                                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="kode" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                                  <Component id="Harga" min="-2" pref="167" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                                  <Component id="stok" min="-2" pref="156" max="-2" attributes="0"/>
+                                  <Component id="stok" min="-2" pref="137" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <Component id="simpan" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="100" max="32767" attributes="0"/>
+              <EmptySpace pref="556" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -77,23 +77,18 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="Harga" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="stok" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="n_barang" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="Harga" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="stok" alignment="1" min="-2" pref="36" max="-2" attributes="0"/>
               </Group>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
-                      <Component id="simpan" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="kode" min="-2" max="-2" attributes="0"/>
-                  </Group>
+              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+              <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="kode" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                  <Component id="buat" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="355" max="32767" attributes="0"/>
+              <EmptySpace pref="757" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -103,11 +98,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="menu tambah barang"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="n_barang">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="n_barangActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
@@ -124,35 +114,31 @@
         <Property name="text" type="java.lang.String" value="Harga / pcs"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="Harga">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="HargaActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="simpan">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Simpan"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="simpanActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
         <Property name="text" type="java.lang.String" value="Stok"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="stok">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="stokActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
         <Property name="text" type="java.lang.String" value="Kode Barang"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="kode">
+    <Component class="Palette.JTextfieldRounded" name="n_barang">
+    </Component>
+    <Component class="Palette.JTextfieldRounded" name="Harga">
+    </Component>
+    <Component class="Palette.JTextfieldRounded" name="stok">
+    </Component>
+    <Component class="Palette.JTextfieldRounded" name="kode">
+    </Component>
+    <Component class="Palette.Custom_ButtonRounded" name="buat">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Buat"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buatActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
