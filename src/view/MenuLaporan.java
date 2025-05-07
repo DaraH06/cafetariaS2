@@ -11,7 +11,7 @@ import com.raven.datechooser.listener.DateChooserAction;
 import com.raven.datechooser.listener.DateChooserAdapter;
 import java.text.SimpleDateFormat;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
-import database.database;
+import database.db_connect;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,7 +32,7 @@ public class MenuLaporan extends javax.swing.JInternalFrame {
     private final Connection con;
 
     public MenuLaporan() {
-        con = database.con();
+        con = db_connect.con();
         initComponents();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
