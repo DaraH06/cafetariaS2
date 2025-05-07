@@ -4,21 +4,56 @@
  */
 package view;
 
+import com.raven.datechooser.DateBetween;
+import java.sql.Connection;
+import com.raven.datechooser.DateChooser;
+import com.raven.datechooser.listener.DateChooserAction;
+import com.raven.datechooser.listener.DateChooserAdapter;
+import java.text.SimpleDateFormat;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import database.database;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author M VARREL MAULANA R
  */
 public class MenuLaporan extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form MenuBarang
-     */
+    private DateChooser chDate = new DateChooser();
+    private final Connection con;
+
     public MenuLaporan() {
+        con = database.con();
         initComponents();
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
-        BasicInternalFrameUI ui=(BasicInternalFrameUI)this.getUI();
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
+
+        // Konfigurasi DateChooser
+        chDate.setTextField(datech);
+        chDate.setDateSelectionMode(DateChooser.DateSelectionMode.BETWEEN_DATE_SELECTED);
+        chDate.setLabelCurrentDayVisible(false);
+        chDate.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
+        setTabelModel();
+        // Gunakan DateChooserAdapter
+        chDate.addActionDateChooserListener(new DateChooserAdapter() {
+            @Override
+            public void dateBetweenChanged(DateBetween date, DateChooserAction action) {
+                if (date != null && date.getFromDate() != null && date.getToDate() != null) {
+                    DefaultTableModel model = (DefaultTableModel) table.getModel();
+                    getData(date.getFromDate(), date.getToDate(), model);
+                }
+            }
+        });
     }
 
     /**
@@ -31,33 +66,150 @@ public class MenuLaporan extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        btn_cetak = new Palette.Custom_ButtonRounded();
+        btn_batal = new Palette.Custom_ButtonRounded();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        table = new Palette.JTable_Custom();
+        jLabel3 = new javax.swing.JLabel();
+        total_pendapatan = new javax.swing.JLabel();
+        datech = new Palette.JTextfieldRounded();
 
         setBackground(new java.awt.Color(255, 255, 255));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setText("Ini menu Laporan");
+        jLabel1.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
+        jLabel1.setText("LAPORAN DATA KEUANGAN");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 19, -1, 30));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(297, 297, 297)
-                .addComponent(jLabel1)
-                .addContainerGap(419, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(186, 186, 186)
-                .addComponent(jLabel1)
-                .addContainerGap(452, Short.MAX_VALUE))
-        );
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vector/dollar.png"))); // NOI18N
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(35, 19, -1, -1));
+
+        btn_cetak.setBackground(new java.awt.Color(255, 51, 0));
+        btn_cetak.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vector/cetaks.png"))); // NOI18N
+        btn_cetak.setText("CETAK");
+        btn_cetak.setFillClick(new java.awt.Color(153, 0, 0));
+        btn_cetak.setFillOriginal(new java.awt.Color(255, 0, 0));
+        btn_cetak.setFillOver(new java.awt.Color(204, 0, 0));
+        btn_cetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cetakActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btn_cetak, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 100, 73, 36));
+
+        btn_batal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vector/gajadi.png"))); // NOI18N
+        btn_batal.setText("BATAL");
+        btn_batal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_batalActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btn_batal, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 100, 77, 37));
+
+        table.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(table);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 680, 202));
+
+        jLabel3.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
+        jLabel3.setText("TOTAL PENDAPATAN");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 370, -1, -1));
+
+        total_pendapatan.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        total_pendapatan.setForeground(new java.awt.Color(255, 0, 0));
+        total_pendapatan.setText("1000.000,00");
+        getContentPane().add(total_pendapatan, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 390, -1, -1));
+
+        datech.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                datechActionPerformed(evt);
+            }
+        });
+        getContentPane().add(datech, new org.netbeans.lib.awtextra.AbsoluteConstraints(79, 105, 190, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_cetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cetakActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_cetakActionPerformed
+
+    private void btn_batalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_batalActionPerformed
+
+    private void datechActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datechActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_datechActionPerformed
+//method method
+
+    private void setTabelModel() {
+        String[] columnNames = {
+            "NO", "Tanggal", "tot.harga", "bayar", "kembali", "kasir"
+        };
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        table.setModel(model);
+    }
+
+    public void getData(Date tanggalMulai, Date tanggalAkhir, DefaultTableModel model) {
+        model.setRowCount(0);
+        int total = 0;
+        try {
+            String sql = "SELECT dt.tanggal, p.total_harga, dt.bayar, dt.kembali, u.username "
+                    + "FROM detail_transaksi dt "
+                    + "JOIN penjualan p ON dt.id_penjualan = p.id_penjualan "
+                    + "JOIN user u ON p.id_user = u.id_user "
+                    + "WHERE dt.tanggal BETWEEN ? AND ? "
+                    + "ORDER BY dt.tanggal DESC";
+
+            try (PreparedStatement st = con.prepareStatement(sql)) {
+                st.setDate(1, new java.sql.Date(tanggalMulai.getTime()));
+                st.setDate(2, new java.sql.Date(tanggalAkhir.getTime()));
+                ResultSet rs = st.executeQuery();
+
+                int no = 1;
+                while (rs.next()) {
+                    int harga = rs.getInt("total_harga");
+                    total += harga;
+                    Object[] rowData = {
+                        no++,
+                        rs.getString("tanggal"),
+                        harga,
+                        rs.getInt("bayar"),
+                        rs.getInt("kembali"),
+                        rs.getString("username")
+                    };
+                    model.addRow(rowData);
+                }
+
+                total_pendapatan.setText(String.valueOf(total));
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(MenuLaporan.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private Palette.Custom_ButtonRounded btn_batal;
+    private Palette.Custom_ButtonRounded btn_cetak;
+    private Palette.JTextfieldRounded datech;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private Palette.JTable_Custom table;
+    private javax.swing.JLabel total_pendapatan;
     // End of variables declaration//GEN-END:variables
 }
