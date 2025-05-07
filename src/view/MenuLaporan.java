@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 
 /**
  *
@@ -147,6 +148,12 @@ public class MenuLaporan extends javax.swing.JInternalFrame {
 
     private void btn_batalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batalActionPerformed
         // TODO add your handling code here:
+        table.clearSelection();
+    
+    // (Opsional) Jika ada field lain yang ingin dikosongkan juga:
+    // txt_nama.setText("");
+    // txt_total.setText("");
+    
     }//GEN-LAST:event_btn_batalActionPerformed
 
     private void datechActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datechActionPerformed
@@ -167,11 +174,11 @@ public class MenuLaporan extends javax.swing.JInternalFrame {
         int total = 0;
         try {
             String sql = "SELECT dt.tanggal, p.total_harga, dt.bayar, dt.kembali, u.username "
-                    + "FROM detail_transaksi dt "
-                    + "JOIN penjualan p ON dt.id_penjualan = p.id_penjualan "
-                    + "JOIN user u ON p.id_user = u.id_user "
-                    + "WHERE dt.tanggal BETWEEN ? AND ? "
-                    + "ORDER BY dt.tanggal DESC";
+           + "FROM detail_transaksi dt "
+           + "JOIN penjualan p ON dt.id_penjualan = p.id_penjualan "
+           + "JOIN user u ON p.id_user = u.id_user "
+           + "WHERE DATE(dt.tanggal) BETWEEN ? AND ? "
+           + "ORDER BY dt.tanggal DESC";
 
             try (PreparedStatement st = con.prepareStatement(sql)) {
                 st.setDate(1, new java.sql.Date(tanggalMulai.getTime()));
