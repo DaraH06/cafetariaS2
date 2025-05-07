@@ -3,30 +3,34 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
+
 import java.awt.Color;
+import javax.swing.UIManager;
+import com.formdev.flatlaf.*;
+
 /**
  *
  * @author M VARREL MAULANA R
  */
+
 public class Dashboard extends javax.swing.JFrame {
 
     /**
      * Creates new form NewJFrame
      */
-    Color DefaultColor,ClickedColor;
-    
+    Color DefaultColor, ClickedColor;
+
     public Dashboard() {
         initComponents();
-        DefaultColor=new Color(255,193,42);
-        ClickedColor=new Color(255, 223, 136);
-        
-        
+        DefaultColor = new Color(255, 193, 42);
+        ClickedColor = new Color(255, 223, 136);
+
         Barang.setBackground(DefaultColor);
         Penjualan.setBackground(DefaultColor);
         Laporan.setBackground(DefaultColor);
         Logout.setBackground(DefaultColor);
         getContentPane().setBackground(Color.WHITE); // ini penting
-    jPanel1.setBackground(Color.WHITE); // kalau kamu pakai panel
+        jPanel1.setBackground(Color.WHITE); // kalau kamu pakai panel
     }
 
     /**
@@ -83,7 +87,7 @@ public class Dashboard extends javax.swing.JFrame {
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
-        jPanel1.add(Logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 720, -1, -1));
+        jPanel1.add(Logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 620, -1, -1));
 
         Laporan.setBackground(new java.awt.Color(255, 193, 42));
         Laporan.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -188,10 +192,10 @@ public class Dashboard extends javax.swing.JFrame {
         );
         jDesktopPanelLayout.setVerticalGroup(
             jDesktopPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 690, Short.MAX_VALUE)
+            .addGap(0, 660, Short.MAX_VALUE)
         );
 
-        jPanel1.add(jDesktopPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 110, 820, 690));
+        jPanel1.add(jDesktopPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 110, 820, 660));
 
         MenuName.setForeground(new java.awt.Color(255, 255, 255));
         MenuName.setText("Menu name");
@@ -199,7 +203,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vector/mentahan.png"))); // NOI18N
         jLabel1.setText("jLabel1");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1060, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1060, 770));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -221,7 +225,7 @@ public class Dashboard extends javax.swing.JFrame {
         Penjualan.setBackground(DefaultColor);
         Laporan.setBackground(DefaultColor);
         Logout.setBackground(DefaultColor);
-        
+
         MenuName.setText("Menu Barang");
     }//GEN-LAST:event_BarangMousePressed
 
@@ -230,7 +234,7 @@ public class Dashboard extends javax.swing.JFrame {
         Penjualan.setBackground(ClickedColor);
         Laporan.setBackground(DefaultColor);
         Logout.setBackground(DefaultColor);
-        
+
         MenuName.setText("Menu Penjualan");
     }//GEN-LAST:event_PenjualanMousePressed
 
@@ -239,7 +243,7 @@ public class Dashboard extends javax.swing.JFrame {
         Penjualan.setBackground(DefaultColor);
         Laporan.setBackground(ClickedColor);
         Logout.setBackground(DefaultColor);
-        
+
         MenuName.setText("Menu Laporan");
     }//GEN-LAST:event_LaporanMousePressed
 
@@ -248,23 +252,23 @@ public class Dashboard extends javax.swing.JFrame {
         Penjualan.setBackground(DefaultColor);
         Laporan.setBackground(DefaultColor);
         Logout.setBackground(ClickedColor);
-        
+
     }//GEN-LAST:event_LogoutMousePressed
 
     private void BarangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BarangMouseClicked
-        MenuBarang Barang=new MenuBarang();
+        MenuBarang Barang = new MenuBarang();
         jDesktopPanel.removeAll();
         jDesktopPanel.add(Barang).setVisible(true);
     }//GEN-LAST:event_BarangMouseClicked
 
     private void PenjualanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PenjualanMouseClicked
-        MenuPenjualan Penjualan=new MenuPenjualan();
+        MenuPenjualan Penjualan = new MenuPenjualan();
         jDesktopPanel.removeAll();
         jDesktopPanel.add(Penjualan).setVisible(true);
     }//GEN-LAST:event_PenjualanMouseClicked
 
     private void LaporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LaporanMouseClicked
-        MenuLaporan Laporan=new MenuLaporan();
+        MenuLaporan Laporan = new MenuLaporan();
         jDesktopPanel.removeAll();
         jDesktopPanel.add(Laporan).setVisible(true);
     }//GEN-LAST:event_LaporanMouseClicked
@@ -273,38 +277,15 @@ public class Dashboard extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
+        /* Set the FlatLaf look and feel */
+        FlatIntelliJLaf.registerCustomDefaultsSource("style");
+        FlatIntelliJLaf.setup();
+        java.awt.EventQueue.invokeLater(new Runnable(){
+        public void run(){
+            new Dashboard().setVisible(true);
+        }}    
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Dashboard().setVisible(true);
-            }
-        });
+        );
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
