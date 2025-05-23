@@ -26,6 +26,8 @@ public class MenuBarang extends javax.swing.JInternalFrame {
         
     }
     
+    
+    
     public void loadDataKeTabel() {
     DefaultTableModel model = new DefaultTableModel();
     model.addColumn("NO");
@@ -73,7 +75,7 @@ public class MenuBarang extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        search = new javax.swing.JTextField();
         tambah = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -91,11 +93,16 @@ public class MenuBarang extends javax.swing.JInternalFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setText("Data Barang");
 
-        jTextField1.setForeground(new java.awt.Color(204, 204, 204));
-        jTextField1.setText("Search");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        search.setForeground(new java.awt.Color(204, 204, 204));
+        search.setText("Search");
+        search.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                searchActionPerformed(evt);
+            }
+        });
+        search.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchKeyReleased(evt);
             }
         });
 
@@ -203,7 +210,7 @@ public class MenuBarang extends javax.swing.JInternalFrame {
                     .addComponent(jLabel2)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(search, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -220,7 +227,7 @@ public class MenuBarang extends javax.swing.JInternalFrame {
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(search, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tambah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(hapus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(edit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -246,9 +253,49 @@ public class MenuBarang extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
+        String keyword = search.getText().trim();
+    DefaultTableModel model = new DefaultTableModel();
+    model.addColumn("NO");
+    model.addColumn("Kode");
+    model.addColumn("Nama");
+    model.addColumn("Harga");
+    model.addColumn("Stok");
+
+    try {
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cafetaria", "root", "");
+        String sql = "SELECT * FROM barang WHERE kode LIKE ? OR nama LIKE ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, "%" + keyword + "%");
+        stmt.setString(2, "%" + keyword + "%");
+        ResultSet rs = stmt.executeQuery();
+
+        int no = 1;
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                no++,
+                rs.getString("kode"),
+                rs.getString("nama"),
+                rs.getInt("harga"),
+                rs.getInt("stok")
+            });
+        }
+
+        tabel_barang.setModel(model);
+
+        // Center isi kolom
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        for (int i = 0; i < tabel_barang.getColumnCount(); i++) {
+            tabel_barang.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
+        stmt.close();
+        conn.close();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Gagal mencari: " + e.getMessage());
+    }
+    }//GEN-LAST:event_searchActionPerformed
 
     private void tambahMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tambahMouseClicked
         // Mengambil parent JDesktopPane
@@ -334,6 +381,10 @@ public class MenuBarang extends javax.swing.JInternalFrame {
     formEdit.setVisible(true);
     }//GEN-LAST:event_editMouseClicked
 
+    private void searchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchKeyReleased
+        searchActionPerformed(null);
+    }//GEN-LAST:event_searchKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel edit;
@@ -344,7 +395,7 @@ public class MenuBarang extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField search;
     private Palette.JTable_Custom tabel_barang;
     private javax.swing.JPanel tambah;
     // End of variables declaration//GEN-END:variables
