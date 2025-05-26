@@ -22,6 +22,14 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 
 /**
  *
@@ -31,6 +39,9 @@ public class MenuLaporan extends javax.swing.JInternalFrame {
 
     private DateChooser chDate = new DateChooser();
     private final Connection con;
+
+    private Date tanggalAwal;
+    private Date tanggalAkhir;
 
     public MenuLaporan() {
         con = db_connect.con();
@@ -50,8 +61,11 @@ public class MenuLaporan extends javax.swing.JInternalFrame {
             @Override
             public void dateBetweenChanged(DateBetween date, DateChooserAction action) {
                 if (date != null && date.getFromDate() != null && date.getToDate() != null) {
+                    tanggalAwal = date.getFromDate();
+                    tanggalAkhir = date.getToDate();
+
                     DefaultTableModel model = (DefaultTableModel) table.getModel();
-                    getData(date.getFromDate(), date.getToDate(), model);
+                    getData(tanggalAwal, tanggalAkhir, model);
                 }
             }
         });
@@ -77,6 +91,7 @@ public class MenuLaporan extends javax.swing.JInternalFrame {
         datech = new Palette.JTextfieldRounded();
 
         setBackground(new java.awt.Color(255, 255, 255));
+        setForeground(new java.awt.Color(246, 246, 246));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
@@ -92,6 +107,11 @@ public class MenuLaporan extends javax.swing.JInternalFrame {
         btn_cetak.setFillClick(new java.awt.Color(153, 0, 0));
         btn_cetak.setFillOriginal(new java.awt.Color(255, 0, 0));
         btn_cetak.setFillOver(new java.awt.Color(204, 0, 0));
+        btn_cetak.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_cetakMouseClicked(evt);
+            }
+        });
         btn_cetak.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_cetakActionPerformed(evt);
@@ -129,8 +149,8 @@ public class MenuLaporan extends javax.swing.JInternalFrame {
 
         total_pendapatan.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
         total_pendapatan.setForeground(new java.awt.Color(255, 0, 0));
-        total_pendapatan.setText("1000.000,00");
-        getContentPane().add(total_pendapatan, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 390, -1, -1));
+        total_pendapatan.setText("0");
+        getContentPane().add(total_pendapatan, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 390, -1, -1));
 
         datech.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -149,16 +169,54 @@ public class MenuLaporan extends javax.swing.JInternalFrame {
     private void btn_batalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batalActionPerformed
         // TODO add your handling code here:
         table.clearSelection();
-    
-    // (Opsional) Jika ada field lain yang ingin dikosongkan juga:
-    // txt_nama.setText("");
-    // txt_total.setText("");
-    
+
+        // (Opsional) Jika ada field lain yang ingin dikosongkan juga:
+        // txt_nama.setText("");
+        // txt_total.setText("");
+
     }//GEN-LAST:event_btn_batalActionPerformed
 
     private void datechActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datechActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_datechActionPerformed
+
+    private void btn_cetakMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_cetakMouseClicked
+        // TODO add your handling code here:
+        if (tanggalAwal == null || tanggalAkhir == null) {
+            JOptionPane.showMessageDialog(this, "Silakan pilih rentang tanggal terlebih dahulu.");
+            return;
+        }
+
+        try {
+            // Load jasper
+            InputStream jasperStream = getClass().getResourceAsStream("/report/Laporan_Penjualan.jasper");
+
+            // Siapkan parameter
+            Map<String, Object> param = new HashMap<>();
+            param.put("tgl_awal", tanggalAwal);
+            param.put("tgl_akhir", tanggalAkhir);
+
+            // Koneksi DB
+            Connection con = db_connect.con();
+
+            // Cetak laporan
+            JasperPrint print = JasperFillManager.fillReport(jasperStream, param, con);
+
+            // Simpan sebagai PDF
+            File pdfFile = new File("Laporan_Penjualan.pdf");
+            JasperExportManager.exportReportToPdfFile(print, pdfFile.getAbsolutePath());
+
+            // Buka file
+            if (pdfFile.exists()) {
+                Desktop.getDesktop().open(pdfFile);
+            } else {
+                JOptionPane.showMessageDialog(this, "File PDF gagal dibuat.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal mencetak laporan: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btn_cetakMouseClicked
 //method method
 
     private void setTabelModel() {
@@ -174,11 +232,11 @@ public class MenuLaporan extends javax.swing.JInternalFrame {
         int total = 0;
         try {
             String sql = "SELECT dt.tanggal, p.total_harga, dt.bayar, dt.kembali, u.username "
-           + "FROM detail_transaksi dt "
-           + "JOIN penjualan p ON dt.id_penjualan = p.id_penjualan "
-           + "JOIN user u ON p.id_user = u.id_user "
-           + "WHERE DATE(dt.tanggal) BETWEEN ? AND ? "
-           + "ORDER BY dt.tanggal DESC";
+                    + "FROM detail_transaksi dt "
+                    + "JOIN penjualan p ON dt.id_penjualan = p.id_penjualan "
+                    + "JOIN user u ON p.id_user = u.id_user "
+                    + "WHERE DATE(dt.tanggal) BETWEEN ? AND ? "
+                    + "ORDER BY dt.tanggal DESC";
 
             try (PreparedStatement st = con.prepareStatement(sql)) {
                 st.setDate(1, new java.sql.Date(tanggalMulai.getTime()));
