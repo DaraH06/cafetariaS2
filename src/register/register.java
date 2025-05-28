@@ -12,44 +12,57 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-/**
- *
- * @author Nisrina
- */
+import base.LoginMenu;
+import static database.db_connect.con;
+
+
 public class register extends javax.swing.JFrame {
-    public void saveToDatabase(String username, String email, String password) {
-        String url = "jdbc:mysql://localhost:3306/cafetaria"; // Pastikan database "cafetaria" sudah dibuat
-        String user = "root"; // Sesuaikan dengan user MySQL Anda
-        String pass = ""; // Jika MySQL punya password, isi di sini
+    public boolean saveToDatabase(String username, String email, String password, String rfid) {
+        if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Semua kolom wajib diisi!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
 
-        String query = "INSERT INTO user_cafe (username, email, password) VALUES (?, ?, ?)";
+        String url = "jdbc:mysql://localhost:3306/cafetaria";
+        String user = "root";
+        String pass = "";
 
-        try (Connection connection = DriverManager.getConnection(url, user, pass);
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try {
+            Connection con = DriverManager.getConnection(url, user, pass);
+            String sql = "INSERT INTO user (username, email, password, id_rfid) VALUES (?, ?, ?, ?)";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, username.trim());
+            pst.setString(2, email.trim());
+            pst.setString(3, hashPassword(password)); // Gunakan hashPassword dari class ini
 
-            String hashedPassword = hashPassword(password); // Hash password sebelum disimpan
-
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, email);
-            preparedStatement.setString(3, hashedPassword);
-
-            int rowsInserted = preparedStatement.executeUpdate();
-            if (rowsInserted > 0) {
-                System.out.println("Data berhasil dimasukkan ke database.");
+            if (rfid == null || rfid.trim().isEmpty()) {
+                pst.setNull(4, java.sql.Types.VARCHAR);
+            } else {
+                pst.setString(4, rfid.trim());
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Gagal menyimpan data ke database.");
+
+            int result = pst.executeUpdate();
+            if (result > 0) {
+                JOptionPane.showMessageDialog(null, "Registrasi berhasil!");
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Registrasi gagal!");
+                return false;
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Terjadi kesalahan saat registrasi: " + ex.getMessage());
+            return false;
         }
     }
 
-    // Metode untuk melakukan hashing password menggunakan SHA-256
+    // ✅ Sekarang hashPassword berada di luar saveToDatabase
     private String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = md.digest(password.getBytes());
 
-            // Konversi byte array ke format heksadesimal
             StringBuilder hexString = new StringBuilder();
             for (byte b : hashBytes) {
                 String hex = Integer.toHexString(0xff & b);
@@ -82,6 +95,7 @@ public class register extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+        id_rfid = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         register = new javax.swing.JButton();
         password = new javax.swing.JPasswordField();
@@ -96,7 +110,19 @@ public class register extends javax.swing.JFrame {
         jLabel3.setBackground(new java.awt.Color(0, 255, 255));
         jLabel3.setForeground(new java.awt.Color(51, 255, 255));
         jLabel3.setText("Log In");
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel3MouseClicked(evt);
+            }
+        });
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 570, -1, -1));
+
+        id_rfid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                id_rfidActionPerformed(evt);
+            }
+        });
+        jPanel1.add(id_rfid, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 380, 150, -1));
 
         jLabel1.setText("Sudah punya akun?");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 570, -1, -1));
@@ -153,30 +179,40 @@ public class register extends javax.swing.JFrame {
     }//GEN-LAST:event_emailActionPerformed
 
     private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
-    String user = username.getText();
+  String user = username.getText();
     String mail = email.getText();
     String pass = password.getText();
+    String rfid = id_rfid.getText(); // ambil nilai RFID dari field
 
     if (user.isEmpty() || mail.isEmpty() || pass.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Semua kolom harus diisi!", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
 
-    // Simpan data ke database
     register dbHelper = new register();
-    dbHelper.saveToDatabase(user, mail, pass);
+    boolean success = dbHelper.saveToDatabase(user, mail, pass, rfid);
 
-    JOptionPane.showMessageDialog(this, "Registrasi berhasil!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-
-    // Mengosongkan semua input field setelah registrasi sukses
+    if (success) {
     username.setText("");
     email.setText("");
-    password.setText(""); 
+    password.setText("");
+    id_rfid.setText("");
+    }
     }//GEN-LAST:event_registerActionPerformed
 
     private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_usernameActionPerformed
+
+    private void id_rfidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_id_rfidActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_id_rfidActionPerformed
+
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        // TODO add your handling code here:
+        new base.LoginMenu().setVisible(true); // buka form login
+        this.dispose();
+    }//GEN-LAST:event_jLabel3MouseClicked
 
     /**
      * @param args the command line arguments
@@ -215,6 +251,7 @@ public class register extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField email;
+    private javax.swing.JTextField id_rfid;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
