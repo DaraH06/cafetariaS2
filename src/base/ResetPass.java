@@ -88,6 +88,7 @@ public class ResetPass extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        txtRessPass.setBorder(null);
         txtRessPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtRessPassActionPerformed(evt);
@@ -95,6 +96,7 @@ public class ResetPass extends javax.swing.JFrame {
         });
         getContentPane().add(txtRessPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 360, 340, 20));
 
+        txtVerRessPass.setBorder(null);
         txtVerRessPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtVerRessPassActionPerformed(evt);

@@ -62,12 +62,15 @@ public class SendCode extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        txtEmail.setBorder(null);
         txtEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtEmailActionPerformed(evt);
             }
         });
         getContentPane().add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 340, 330, 30));
+
+        txtVer.setBorder(null);
         getContentPane().add(txtVer, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 470, 330, 30));
 
         btnSend.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vector/Btn Send.png"))); // NOI18N
