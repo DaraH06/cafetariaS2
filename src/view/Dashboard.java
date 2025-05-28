@@ -278,8 +278,8 @@ public class Dashboard extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Set the FlatLaf look and feel */
-        FlatIntelliJLaf.registerCustomDefaultsSource("style");
-        FlatIntelliJLaf.setup();
+        FlatLightLaf.registerCustomDefaultsSource("style");
+        FlatLightLaf.setup();
         java.awt.EventQueue.invokeLater(new Runnable(){
         public void run(){
             new Dashboard().setVisible(true);
