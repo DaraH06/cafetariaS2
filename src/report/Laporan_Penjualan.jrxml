@@ -150,7 +150,7 @@
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$F{tanggal}]]></textFieldExpression>
-                <patternExpression><![CDATA["dd-MM-yyyy"]]></patternExpression>
+                <patternExpression><![CDATA["DD-MM-YYYY"]]></patternExpression>
             </textField>
             <textField>
                 <reportElement x="196" y="0" width="79" height="20" uuid="be17f36e-0720-4277-a8c7-3d76ff0f5dd5"/>
