@@ -41,7 +41,7 @@
                                   <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="bayar" alignment="0" min="-2" pref="133" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="90" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
@@ -80,13 +80,15 @@
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="harga_total" pref="33" max="32767" attributes="0"/>
-                  <Component id="bayar" max="32767" attributes="0"/>
-                  <Component id="simpan" alignment="0" max="32767" attributes="0"/>
-                  <Component id="kembalian" alignment="0" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="simpan" pref="31" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="harga_total" alignment="0" pref="31" max="32767" attributes="0"/>
+                      <Component id="bayar" alignment="0" max="32767" attributes="0"/>
+                      <Component id="kembalian" alignment="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" pref="479" max="-2" attributes="0"/>
+              <EmptySpace pref="481" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -235,7 +237,7 @@
     </Component>
     <Component class="Palette.Custom_ButtonRounded" name="simpan">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Simpan"/>
+        <Property name="text" type="java.lang.String" value="simpan"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="simpanActionPerformed"/>

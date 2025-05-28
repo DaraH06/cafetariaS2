@@ -16,11 +16,23 @@ import java.sql.ResultSet;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
-import jdk.jfr.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.view.JasperViewer;
+
+
+
 
 
 /**
@@ -54,6 +66,38 @@ public class MenuPenjualan extends javax.swing.JInternalFrame {
         }
     });
     }
+    
+    private void tambahBarangKeTabel(String kodeBarcode) {
+    try {
+        Connection conn = Koneksi.getConnection();
+        String sql = "SELECT id_barang, nama, harga FROM barang WHERE barcode = ?";
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setString(1, kodeBarcode);
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            int idBarang = rs.getInt("id_barang");
+            String namaBarang = rs.getString("nama");
+            int harga = rs.getInt("harga");
+            int jumlah = 1;
+            int total = harga * jumlah;
+
+            // Tambahkan ke JTable
+            DefaultTableModel model = (DefaultTableModel) tabel_penjualan.getModel();
+            model.addRow(new Object[] { idBarang, namaBarang, harga, jumlah, total });
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Barang dengan barcode ini tidak ditemukan.");
+        }
+
+        rs.close();
+        pst.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+
 
     
     /**
@@ -141,7 +185,7 @@ public class MenuPenjualan extends javax.swing.JInternalFrame {
             }
         });
 
-        simpan.setText("Simpan");
+        simpan.setText("simpan");
         simpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 simpanActionPerformed(evt);
@@ -167,7 +211,7 @@ public class MenuPenjualan extends javax.swing.JInternalFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4)
                                     .addComponent(bayar, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(84, 84, 84)
+                                .addGap(90, 90, 90)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel5)
                                     .addGroup(layout.createSequentialGroup()
@@ -196,12 +240,13 @@ public class MenuPenjualan extends javax.swing.JInternalFrame {
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(harga_total, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                    .addComponent(bayar)
-                    .addComponent(simpan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(kembalian))
-                .addGap(479, 479, 479))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(simpan, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(harga_total, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                        .addComponent(bayar, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(kembalian, javax.swing.GroupLayout.Alignment.LEADING)))
+                .addContainerGap(481, Short.MAX_VALUE))
         );
 
         pack();
@@ -227,9 +272,80 @@ public class MenuPenjualan extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_kembalianActionPerformed
 
     private void simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanActionPerformed
-       
+    try {
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cafetaria", "root", "");
+
+        // 1. Simpan ke tabel detail_transaksi dan ambil id_detail
+        String sqlDetail = "INSERT INTO detail_transaksi (tanggal, bayar, kembali) VALUES (?, ?, ?)";
+        PreparedStatement pstDetail = conn.prepareStatement(sqlDetail, PreparedStatement.RETURN_GENERATED_KEYS);
+        
+        LocalDateTime now = LocalDateTime.now();
+        pstDetail.setTimestamp(1, Timestamp.valueOf(now));
+        pstDetail.setBigDecimal(2, new BigDecimal(bayar.getText()));
+        pstDetail.setBigDecimal(3, new BigDecimal(kembalian.getText()));
+        pstDetail.executeUpdate();
+        
+        ResultSet rs = pstDetail.getGeneratedKeys();
+        int idDetail = 0;
+        if (rs.next()) {
+            idDetail = rs.getInt(1); // ✅ Dapatkan id_detail terbaru
+        }
+
+        // 2. Simpan detail barang ke tabel penjualan
+        String sqlPenjualan = "INSERT INTO penjualan (id_barang, id_user, jumlah, total_harga, id_detail) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement pstItem = conn.prepareStatement(sqlPenjualan);
+
+        for (int i = 0; i < tabel_penjualan.getRowCount(); i++) {
+            String kodeBarang = tabel_penjualan.getValueAt(i, 1).toString();
+            int idBarang = getIdBarangFromKode(kodeBarang, conn);
+            int jumlah = Integer.parseInt(tabel_penjualan.getValueAt(i, 4).toString());
+            int total = Integer.parseInt(tabel_penjualan.getValueAt(i, 5).toString());
+            int idUser = 1; // Ganti sesuai user login jika dinamis
+
+            pstItem.setInt(1, idBarang);
+            pstItem.setInt(2, idUser);
+            pstItem.setInt(3, jumlah);
+            pstItem.setInt(4, total);
+            pstItem.setInt(5, idDetail);
+            pstItem.addBatch();
+        }
+
+        pstItem.executeBatch();
+        pstItem.close();
+        pstDetail.close();
+
+        // 3. Hapus data penjualan yang tidak punya id_detail
+        String sqlDeleteNull = "DELETE FROM penjualan WHERE id_detail IS NULL";
+        PreparedStatement pstDelete = conn.prepareStatement(sqlDeleteNull);
+        pstDelete.executeUpdate();
+        pstDelete.close();
+
+        JOptionPane.showMessageDialog(this, "Transaksi berhasil disimpan!");
+
+        // 4. Kirim parameter id_detail ke JasperReport
+        try {
+            String path = "src/Report/reportpenjualan.jasper";
+            Map<String, Object> parameter = new HashMap<>();
+            parameter.put("id_detail", idDetail); // ✅ Kirim id_detail yang terbaru
+
+            JasperPrint print = JasperFillManager.fillReport(path, parameter, conn);
+            JasperViewer.viewReport(print, false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal menampilkan report: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage());
+    }
     }//GEN-LAST:event_simpanActionPerformed
 
+    private int getLoggedInUserId() {
+    // misal ambil dari sesi, session, atau variabel global
+    return 1; // dummy user id
+}
+    
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_searchActionPerformed
@@ -259,13 +375,15 @@ public class MenuPenjualan extends javax.swing.JInternalFrame {
         int no = 1;
         Connection conn = Koneksi.getConnection();
         String sql = "SELECT b.kode, b.nama, b.harga, p.jumlah, p.total_harga, u.username " +
-                     "FROM penjualan p " +
-                     "INNER JOIN barang b ON p.id_barang = b.id_barang " +
-                     "INNER JOIN user u ON p.id_user = u.id_user";
+             "FROM penjualan p " +
+             "INNER JOIN barang b ON p.id_barang = b.id_barang " +
+             "INNER JOIN user u ON p.id_user = u.id_user " +
+             "WHERE p.id_detail IS NULL";
         PreparedStatement pst = conn.prepareStatement(sql);
         ResultSet rs = pst.executeQuery();
         
         while (rs.next()) {
+            System.out.println("Data: " + rs.getString("kode")); // debug
             model.addRow(new Object[]{
                 no++,
                 rs.getString("kode"),
@@ -296,6 +414,19 @@ public class MenuPenjualan extends javax.swing.JInternalFrame {
         e.printStackTrace();
     }
     }
+    
+    private int getIdBarangFromKode(String kode, Connection conn) throws SQLException {
+    String sql = "SELECT id_barang FROM barang WHERE kode = ?";
+    PreparedStatement pst = conn.prepareStatement(sql);
+    pst.setString(1, kode);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+        return rs.getInt("id_barang");
+    } else {
+        throw new SQLException("Kode barang tidak ditemukan: " + kode);
+    }
+}
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
